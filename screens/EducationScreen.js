@@ -1,20 +1,20 @@
-import React, {useState, useRef} from 'react';
-import {View, Alert, StyleSheet,Icon} from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Alert, StyleSheet, Icon } from 'react-native';
 import YoutubePlayer from 'react-native-youtube-iframe';
 
 
-const [playing, setPlaying] = useState(false);
-
-const [isMute, setMute] = useState(false);
-
-const controlRef = useRef();
-
-export default class EducationScreen extends React.Component{
-
- 
 
 
- onStateChange = (state) => {
+
+const EducationScreen = () => {
+
+  const [playing, setPlaying] = useState(false);
+
+  const [isMute, setMute] = useState(false);
+  // const controlRef = useRef();
+
+
+  onStateChange = (state) => {
 
     if (state === 'ended') {
 
@@ -33,37 +33,37 @@ export default class EducationScreen extends React.Component{
   };
 
 
-  togglePlaying= () => {
+  togglePlaying = () => {
 
     setPlaying((prev) => !prev);
 
   };
 
 
-seekBackAndForth = (control) => {
+  seekBackAndForth = (control) => {
 
     console.log('currentTime');
 
-    controlRef.current?.getCurrentTime().then((currentTime) => {
+    // controlRef.current?.getCurrentTime().then((currentTime) => {
 
-      control === 'forward'
+    //   control === 'forward'
 
-        ? controlRef.current?.seekTo(currentTime + 15, true)
+    //     ? controlRef.current?.seekTo(currentTime + 15, true)
 
-        : controlRef.current?.seekTo(currentTime - 15, true);
+    //     : controlRef.current?.seekTo(currentTime - 15, true);
 
-    });
+    // });
 
   };
 
   muteVideo = () => setMute(!isMute);
 
- ControlIcon = ({name, onPress}) => (
+  ControlIcon = ({ name, onPress }) => (
 
     <Icon onPress={onPress} name={name} size={40} color="#fff" />
 
   );
-render(){
+  // render() {
   return (
 
     <View style={styles.container}>
@@ -72,7 +72,7 @@ render(){
 
         height={300}
 
-        ref={controlRef}
+        // ref={controlRef}
 
         play={playing}
 
@@ -86,7 +86,7 @@ render(){
 
       <View style={styles.controlContainer}>
 
-        <ControlIcon
+        {/* <ControlIcon
 
           onPress={() => seekBackAndForth('rewind')}
 
@@ -106,23 +106,23 @@ render(){
 
           name="skip-next"
 
-        />
+        /> */}
 
       </View>
 
-      <ControlIcon
+      {/* <ControlIcon
 
         onPress={muteVideo}
 
         name={isMute ? 'volume-up' : 'volume-off'}
 
-      />
+      /> */}
 
     </View>
 
-  );
+  )
 
-};
+  // };
 }
 
 
@@ -145,3 +145,5 @@ const styles = StyleSheet.create({
   },
 
 });
+
+export default EducationScreen;

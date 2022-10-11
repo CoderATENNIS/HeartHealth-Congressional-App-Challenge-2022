@@ -8,23 +8,23 @@ import {Linking,Platform,TouchableOpacity,Text} from "react-native";
     Linking.openURL(phoneNumber);
  };
  
-export default class App extends React.Component{
+export default class ProfileScreen extends React.Component{
 render(){
         return(
                 <TouchableOpacity
                    style={{
                    height: 30,
-                   width: 30,
-                   backgroundColor: "#329df4",
+                   width: 250,
+                   backgroundColor: "red",
                    alignItems: "center",
                    justifyContent: "center",
                    borderRadius: 5,
                    marginLeft:50,
                    marginTop:100
                    }}
-                 onPress={()=>{dialCall(2079079500)}}
+                 onPress={()=>{dialCall(9176202718)}}
                 >
-                <Text>Phone</Text>
+                <Text>Touch this button to call 911</Text>
                 </TouchableOpacity>
               )
   }

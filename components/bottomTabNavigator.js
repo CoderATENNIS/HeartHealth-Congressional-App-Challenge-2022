@@ -6,7 +6,7 @@ import HomeScreen from '../screens/HomeScreen'
 import ProfileScreen from '../screens/ProfileScreen'
 import TrainingScreen from '../screens/TrainingScreen'
 import EducationScreen from '../screens/EducationScreen'
-import CommunityScreen from '../screens/CommunityScreen'
+import RegisterAED from '../screens/RegisterAED'
 
 const Tab = createBottomTabNavigator();
 
@@ -45,7 +45,7 @@ if (route.name === 'Home') {
           <Tab.Screen name="Home" component={HomeScreen} />
           <Tab.Screen name="Profile" component={ProfileScreen} />
           <Tab.Screen name="Education" component={EducationScreen} />
-          <Tab.Screen name="Community" component={CommunityScreen} />
+          <Tab.Screen name="RegisterAED" component={RegisterAED} />
           <Tab.Screen name="Training" component={TrainingScreen} />
         </Tab.Navigator>
       </NavigationContainer>
