@@ -83,6 +83,7 @@ const EducationScreen = () => {
         onChangeState={onStateChange}
 
       />
+      
 
       <View style={styles.controlContainer}>
 
