@@ -106,6 +106,44 @@ const RegisterAED = (props) => {
     text = JSON.stringify(location);
   }
 
+
+  const setCurrentLocation = async () => {
+    console.log("inside setCurrentLocation")
+    let locationPermission = await Location.requestBackgroundPermissionsAsync()
+    console.log("setting location permission", locationPermission)
+    if (locationPermission !== 'granted') {
+      setErrorMsg('Permission to access location was denied');
+      return;
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    setLocation(location);
+  };
+  useEffect(() => {
+    (async () => {
+      try {
+        console.log("inside useEffect...")
+
+        const cameraPermission = await Camera.requestCameraPermissionsAsync()
+        const mediaLibraryPermission = await MediaLibrary.requestPermissionsAsync()
+        console.log("setting camera permission", cameraPermission)
+        setHasCameraPermission(cameraPermission.status === "granted");
+        setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
+        setCurrentLocation()
+      } catch (error) {
+        console.log(error)
+      }
+
+    })();
+  }, []);
+  if (hasCameraPermission === "undefined") { return <Text>Requesting for permission</Text> }
+  else if (!hasCameraPermission) { return <Text>Permission denied</Text> }
+  let text = 'Waiting..';
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
+
   function toggleCameraType() {
     setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
   }
@@ -115,6 +153,26 @@ const RegisterAED = (props) => {
       base64: true,
       exif: false
     };
+
+    // if (!camera) return
+    // Camera.current.takePictureAsync().then(onPictureSaved);
+    const result = await cameraRef.current.takePictureAsync(options);
+    console.log(result)
+    setPhoto(result)
+  }
+
+  if (photo) {
+    let sharePic = () => {
+      shareAsync(photo.uri).then(() => {
+        setPhoto(undefined)
+      })
+    }
+
+    let savePic = () => {
+      MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
+        setPhoto(undefined)
+      })
+    }
 
     // if (!camera) return
     // Camera.current.takePictureAsync().then(onPictureSaved);
@@ -192,20 +250,9 @@ if(clickedOnButton==true)
               <Text style={{ color: 'black' }}>Flip Camera</Text>
             </TouchableOpacity>
             <Button title={"Take Pic"} onPress={takePicture} />
-            <View style={{}}>
-     
-    </View>
           </View>
         </Camera>
         // <Text style={styles.paragraph}>{text}</Text>
-
-
-
-
-
-
-
-
       }
 
     </View >
