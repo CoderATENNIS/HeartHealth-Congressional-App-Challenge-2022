@@ -49,6 +49,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "packagerOpts": {
+      "sourceExts": ["cjs","esm","idb"]
     }
   }
 }
