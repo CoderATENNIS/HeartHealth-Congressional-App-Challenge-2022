@@ -1,5 +1,5 @@
 import React, { Component, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, Button, ActivityIndicator, TouchableHighlight } from "react-native";
 import Permissions from "expo-permissions"
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Camera, CameraType } from 'expo-camera';
@@ -12,13 +12,43 @@ import * as Location from 'expo-location';
 import { SafeAreaView } from "react-native-safe-area-context";
 import {firebase} from "../config"
 
+// import { firebase } from "../firebaseConfig";
+import { getStorage, ref, uploadString, uploadBytes, listAll } from "firebase/storage";
+import { initializeApp } from "firebase/app"
+import * as ImagePicker from 'expo-image-picker';
+
+
+const config = {
+  apiKey: "AIzaSyBFWGhe8q4UV633SSdL8lNrsHTbvSlVqKo",
+  authDomain: "heartapp-4cb6e.firebaseapp.com",
+  projectId: "heartapp-4cb6e",
+  storageBucket: "heartapp-4cb6e.appspot.com",
+  messagingSenderId: "247795002288",
+  appId: "1:247795002288:web:d11c71a6ad8645892e4475"
+};
+
+initializeApp(config)
+
+// const storage = getStorage(app)
 
 const RegisterAED = (props) => {
+  // Create a root reference
+  // const storage = getStorage();
+  // console.log("firebase", firebase)
+  // const storage = firebase.storage();
+  // const storage = getStorage(app);
+  // var storage1 = firebase.app().storage("gs://my-custom-bucket");
+
+  // console.log("storage ##############", storage)
+  // console.log("storage ##############", storage1)
+
   let camera = null
   let cameraRef = useRef()
   const [hasCameraPermission, setHasCameraPermission] = useState()
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState()
   const [photo, setPhoto] = useState();
+  const [uploading, setUploading] = useState(false)
+
   const [location, setLocation] = useState(null);
 
   const[clickedOnButton,setOnClicked]=useState(false);
@@ -34,42 +64,104 @@ const RegisterAED = (props) => {
   //if (!permission.granted) ... 
   
 
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      console.log("inside !result.cancelled")
+      const storage = getStorage(); //the storage itself
+      console.log("#### storage.....", storage)
+
+      const refer = ref(storage, 'Pictures/image.jpg'); //how the image will be addressed inside the storage
+      console.log("ref....###", refer)
+
+      //convert image to array of bytes
+      const img = await fetch(result.uri);
+      const bytes = await img.blob();
+
+      console.log("uri....###", result.uri)
+
+
+      uploadBytes(refer, bytes).then((snapshot) => {
+        console.log('Uploaded an array!');
+      }); //upload images
+    }
+  };
+
   const uploadImage = async () => {
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function() {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function() {
-        reject(new TypeError('Network request failed'));
-      };
-      xhr.responseType = 'blob';
-      xhr.open('GET', photo.uri, true);
-      xhr.send(null);
-    })
-    const ref = firebase.storage().ref().child(`Pictures/Image1`)
-    const snapshot = ref.put(blob)
-    snapshot.on(firebase.storage.TaskEvent.STATE_CHANGED,
-      ()=>{
-        setUploading(true)
-      },
-      (error) => {
-        setUploading(false)
-        console.log(error)
-        blob.close()
-        return 
-      },
-      () => {
-        snapshot.snapshot.ref.getDownloadURL().then((url) => {
-          setUploading(false)
-          console.log("Download URL: ", url)
-          setImage(url)
-          blob.close()
-          return url
-        })
-      }
-      )
+    // Create a reference under which you want to list
+    console.log("... in upload")
+
+
+    // const ref = storage.ref().child(`Pictures`)
+    const storage = getStorage();
+    const reference = ref(storage, `Pictures/_main.png`);
+    // Create a reference under which you want to list
+    // const listRef = ref(storage, 'Pictures');
+    console.log("ref... ", reference)
+
+    console.log("photo uri", photo.uri)
+
+    const img = await fetch(photo.uri);
+    const blob = await img.blob();
+    // console.log(blob)
+    // const newFile = new File([blob], `hello.jpg`, {
+    //   type: 'image/jpg',
+    // })
+    uploadBytes(reference, blob).then((snapshot) => {
+      console.log('Uploaded an array!');
+    });;
+    // const blob = await new Promise((resolve, reject) => {
+    //   const xhr = new XMLHttpRequest();
+    //   xhr.onload = function () {
+    //     resolve(xhr.response);
+    //   };
+    //   xhr.onerror = function () {
+    //     reject
+
+    //       (new TypeError('Network request failed'));
+    //   };
+    //   xhr.responseType = 'blob';
+    //   xhr.open('GET', photo.uri, true);
+    //   xhr.send(null);
+    // })
+
+    // const snapshot = ref.put(blob)
+    // snapshot.on(firebase.storage.TaskEvent.STATE_CHANGED,
+    //   () => {
+    //     console.log("...setUploading")
+    //     setUploading(true)
+    //   },
+    //   (error) => {
+    //     console.log("...erro")
+    //     setUploading(false)
+    //     console.log(error)
+    //     blob.close()
+    //     return
+    //   },
+    //   () => {
+    //     console.log("...done")
+    //     snapshot.snapshot.ref.getDownloadURL().then((url) => {
+    //       setUploading(false)
+    //       console.log("Download URL: ", url)
+    //       setImage(url)
+    //       blob.close()
+    //       return url
+    //     })
+    //   }
+    // )
+
+    // const videoRef = firebase.storage().ref("video/filename");
+
+
+
   }
+
   const setCurrentLocation = async () => {
     console.log("inside setCurrentLocation")
     let locationPermission = await Location.requestBackgroundPermissionsAsync()
@@ -81,6 +173,8 @@ const RegisterAED = (props) => {
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
   };
+
+
   useEffect(() => {
     (async () => {
       try {
@@ -148,7 +242,7 @@ const RegisterAED = (props) => {
     // if (!camera) return
     // Camera.current.takePictureAsync().then(onPictureSaved);
     const result = await cameraRef.current.takePictureAsync(options);
-    console.log(result)
+    console.log(result.uri)
     setPhoto(result)
   }
 
@@ -196,8 +290,7 @@ const RegisterAED = (props) => {
         <Button title={"Share"} onPress={() => sharePic()} />
         {hasMediaLibraryPermission ? <Button title={"Save Pic"} onPress={savePic} /> : ""}
         <Button title={"Discard"} onPress={() => setPhoto(undefined)} />
-        
-
+        {!uploading ? <Button title='Upload Image' onPress={uploadImage} /> : <ActivityIndicator size={'small'} color='black' />}
       </SafeAreaView>
  
      
@@ -205,7 +298,7 @@ const RegisterAED = (props) => {
     )
   }
 
-  // const onPictureSaved = ({ uri, width, height, exif, base64 }) => {
+  // const onPictureSaved = ({uri, width, height, exif, base64}) => {
   //   console.log(uri);
   // }
 
@@ -241,6 +334,9 @@ if(clickedOnButton==true)
               <Text style={{ color: 'black' }}>Flip Camera</Text>
             </TouchableOpacity>
             <Button title={"Take Pic"} onPress={takePicture} />
+            <TouchableHighlight onPress={pickImage}>
+              <Text>select image</Text>
+            </TouchableHighlight>
           </View>
         </Camera>
         // <Text style={styles.paragraph}>{text}</Text>
