@@ -12,6 +12,7 @@ import * as Location from 'expo-location';
 import { SafeAreaView } from "react-native-safe-area-context";
 import {firebase} from "../config"
 
+
 const RegisterAED = (props) => {
   let camera = null
   let cameraRef = useRef()
@@ -99,7 +100,7 @@ const RegisterAED = (props) => {
   }, []);
   if (hasCameraPermission === "undefined") { return <Text>Requesting for permission</Text> }
   else if (!hasCameraPermission) { return <Text>Permission denied</Text> }
-  let text = 'Waiting..';
+   text = 'Waiting..';
   if (errorMsg) {
     text = errorMsg;
   } else if (location) {
@@ -107,17 +108,7 @@ const RegisterAED = (props) => {
   }
 
 
-  const setCurrentLocation = async () => {
-    console.log("inside setCurrentLocation")
-    let locationPermission = await Location.requestBackgroundPermissionsAsync()
-    console.log("setting location permission", locationPermission)
-    if (locationPermission !== 'granted') {
-      setErrorMsg('Permission to access location was denied');
-      return;
-    }
-    let location = await Location.getCurrentPositionAsync({});
-    setLocation(location);
-  };
+  
   useEffect(() => {
     (async () => {
       try {
