@@ -13,10 +13,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import {firebase} from "../config"
 
 // import { firebase } from "../firebaseConfig";
-import { getStorage, ref, uploadString, uploadBytes, listAll } from "firebase/storage";
+import { getStorage, ref, uploadString, uploadBytes, uploadBytesResumable, listAll } from "firebase/storage";
 import { initializeApp } from "firebase/app"
 import * as ImagePicker from 'expo-image-picker';
-
+// import * as ImageManipulator from 'expo-image-manipulator';
 
 const config = {
   apiKey: "AIzaSyBFWGhe8q4UV633SSdL8lNrsHTbvSlVqKo",
@@ -113,53 +113,9 @@ const RegisterAED = (props) => {
     // const newFile = new File([blob], `hello.jpg`, {
     //   type: 'image/jpg',
     // })
-    uploadBytes(reference, blob).then((snapshot) => {
+    uploadBytesResumable(reference, blob).then((snapshot) => {
       console.log('Uploaded an array!');
     });;
-    // const blob = await new Promise((resolve, reject) => {
-    //   const xhr = new XMLHttpRequest();
-    //   xhr.onload = function () {
-    //     resolve(xhr.response);
-    //   };
-    //   xhr.onerror = function () {
-    //     reject
-
-    //       (new TypeError('Network request failed'));
-    //   };
-    //   xhr.responseType = 'blob';
-    //   xhr.open('GET', photo.uri, true);
-    //   xhr.send(null);
-    // })
-
-    // const snapshot = ref.put(blob)
-    // snapshot.on(firebase.storage.TaskEvent.STATE_CHANGED,
-    //   () => {
-    //     console.log("...setUploading")
-    //     setUploading(true)
-    //   },
-    //   (error) => {
-    //     console.log("...erro")
-    //     setUploading(false)
-    //     console.log(error)
-    //     blob.close()
-    //     return
-    //   },
-    //   () => {
-    //     console.log("...done")
-    //     snapshot.snapshot.ref.getDownloadURL().then((url) => {
-    //       setUploading(false)
-    //       console.log("Download URL: ", url)
-    //       setImage(url)
-    //       blob.close()
-    //       return url
-    //     })
-    //   }
-    // )
-
-    // const videoRef = firebase.storage().ref("video/filename");
-
-
-
   }
 
   const setCurrentLocation = async () => {
@@ -234,15 +190,20 @@ const RegisterAED = (props) => {
   }
   const takePicture = async () => {
     let options = {
-      quality: 1,
+      quality: 0.1,
       base64: true,
-      exif: false
+      exif: false,
+      skipProcessing: false
     };
-
     // if (!camera) return
-    // Camera.current.takePictureAsync().then(onPictureSaved);
     const result = await cameraRef.current.takePictureAsync(options);
-    console.log(result.uri)
+    // New code here
+    // const manipResult = await ImageManipulator.manipulateAsync(
+    //   result.uri,
+    //   [{ rotate: 90 }, { flip: ImageManipulator.FlipType.Vertical }],
+    //   { compress: 2, format: ImageManipulator.SaveFormat.PNG }
+    // );
+    // console.log(manipResult.uri)
     setPhoto(result)
   }
 
@@ -339,7 +300,6 @@ if(clickedOnButton==true)
             </TouchableHighlight>
           </View>
         </Camera>
-        // <Text style={styles.paragraph}>{text}</Text>
       }
 
     </View >
