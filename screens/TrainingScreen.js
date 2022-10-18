@@ -3,18 +3,14 @@ import { Platform, Text, View, StyleSheet } from 'react-native';
 import Device from 'expo-device';
 import * as Location from 'expo-location';
 
+
 export default function TrainingCPRScreen() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
     (async () => {
-      if (Platform.OS === 'android' && !Device.isDevice) {
-        setErrorMsg(
-          'Oops, this will not work on Snack in an Android Emulator. Try it on your device!'
-        );
-        return;
-      }
+     
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
@@ -31,7 +27,13 @@ export default function TrainingCPRScreen() {
     text = errorMsg;
   } else if (location) {
     text = JSON.stringify(location);
+ 
   }
+  /*db.collection("cities").doc("LA").set({
+    name: "Los Angeles",
+    state: "CA",
+    country: "USA"
+})*/
 
   return (
     <View style={styles.container}>
@@ -50,5 +52,6 @@ const styles = StyleSheet.create({
   paragraph: {
     fontSize: 18,
     textAlign: 'center',
+    color:"black"
   },
 });

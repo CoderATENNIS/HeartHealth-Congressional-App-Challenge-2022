@@ -24,6 +24,7 @@ render(){
                    }}
                  onPress={()=>{dialCall(9176202718)}}
                 >
+                  
                 <Text>Touch this button to call 911</Text>
                 </TouchableOpacity>
               )

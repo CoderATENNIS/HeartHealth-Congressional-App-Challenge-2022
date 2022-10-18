@@ -1,5 +1,5 @@
 import React, { Component, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, Button, ActivityIndicator, TouchableHighlight } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, Button, ActivityIndicator, TouchableHighlight, TextInput } from "react-native";
 import Permissions from "expo-permissions"
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Camera, CameraType } from 'expo-camera';
@@ -10,8 +10,6 @@ import * as MediaLibrary from 'expo-media-library'
 import { useIsFocused } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import { SafeAreaView } from "react-native-safe-area-context";
-import {firebase} from "../config"
-
 // import { firebase } from "../firebaseConfig";
 import { getStorage, ref, uploadString, uploadBytes, uploadBytesResumable, listAll } from "firebase/storage";
 import { initializeApp } from "firebase/app"
@@ -44,14 +42,14 @@ const RegisterAED = (props) => {
 
   let camera = null
   let cameraRef = useRef()
+  const[textNotes,setTextNotes]=useState("");
+  const[hasClickedButton,setHasClickedButton]=useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState()
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState()
   const [photo, setPhoto] = useState();
   const [uploading, setUploading] = useState(false)
 
   const [location, setLocation] = useState(null);
-
-  const[clickedOnButton,setOnClicked]=useState(false);
 
   const isFocused = useIsFocused();
   const [errorMsg, setErrorMsg] = useState(null);
@@ -62,7 +60,6 @@ const RegisterAED = (props) => {
   // if (!permission) ... 
 
   //if (!permission.granted) ... 
-  
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -71,6 +68,9 @@ const RegisterAED = (props) => {
       aspect: [4, 3],
       quality: 1,
     });
+
+
+
 
     if (!result.cancelled) {
       console.log("inside !result.cancelled")
@@ -150,34 +150,6 @@ const RegisterAED = (props) => {
   }, []);
   if (hasCameraPermission === "undefined") { return <Text>Requesting for permission</Text> }
   else if (!hasCameraPermission) { return <Text>Permission denied</Text> }
-   text = 'Waiting..';
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
-
-
-  
-  useEffect(() => {
-    (async () => {
-      try {
-        console.log("inside useEffect...")
-
-        const cameraPermission = await Camera.requestCameraPermissionsAsync()
-        const mediaLibraryPermission = await MediaLibrary.requestPermissionsAsync()
-        console.log("setting camera permission", cameraPermission)
-        setHasCameraPermission(cameraPermission.status === "granted");
-        setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
-        setCurrentLocation()
-      } catch (error) {
-        console.log(error)
-      }
-
-    })();
-  }, []);
-  if (hasCameraPermission === "undefined") { return <Text>Requesting for permission</Text> }
-  else if (!hasCameraPermission) { return <Text>Permission denied</Text> }
   let text = 'Waiting..';
   if (errorMsg) {
     text = errorMsg;
@@ -220,74 +192,71 @@ const RegisterAED = (props) => {
       })
     }
 
-    // if (!camera) return
-    // Camera.current.takePictureAsync().then(onPictureSaved);
-    const result = await cameraRef.current.takePictureAsync(options);
-    console.log(result)
-    setPhoto(result)
-  }
-
-  if (photo) {
-    let sharePic = () => {
-      shareAsync(photo.uri).then(() => {
-        setPhoto(undefined)
-      })
-    }
-
-    let savePic = () => {
-      MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
-        setPhoto(undefined)
-      })
-    }
-
 
     return (
       <SafeAreaView style={styles.container}>
-              
-              <Button title='Upload Image' onPress={uploadImage} />
-              <ActivityIndicator size={'small'} color='black' />
-      
         <Image style={styles.preview} source={{ uri: "data:image/jpg;base64," + photo.base64 }} />
         <Button title={"Share"} onPress={() => sharePic()} />
         {hasMediaLibraryPermission ? <Button title={"Save Pic"} onPress={savePic} /> : ""}
         <Button title={"Discard"} onPress={() => setPhoto(undefined)} />
         {!uploading ? <Button title='Upload Image' onPress={uploadImage} /> : <ActivityIndicator size={'small'} color='black' />}
       </SafeAreaView>
- 
-     
-
     )
   }
 
-  // const onPictureSaved = ({uri, width, height, exif, base64}) => {
-  //   console.log(uri);
-  // }
-
-
-if(clickedOnButton==true)
-{
-  
-}
 
   return (
     
     <View style={styles.container}>
-  <TouchableOpacity >
-<Button title="Click to take pic" onPress={()=>{
-    setOnClicked(true)
-  }}></Button>
+<TouchableOpacity style={{
 
-  </TouchableOpacity>
-  <TouchableOpacity >
-<Button title="Click to return back" onPress={()=>{
-    setOnClicked(false)
-  }}></Button>
+width:100,
+height:65,
+backgroundColor:"black",
+display:"flex",
+justifyContent:"center",
+alignSelf:"center",
+border:"2px solid black"
+, borderWidth: 2,
+    borderRadius: 15,
+    marginTop:"0.1%"
+}} onPress={ ()=>setHasClickedButton(true)}
+><Text style={{color:"red",}}>Click me to take photo</Text></TouchableOpacity>
 
-  </TouchableOpacity>
+<TouchableOpacity style={{
+
+width:100,
+height:65,
+backgroundColor:"black",
+display:"flex",
+justifyContent:"center",
+alignSelf:"center",
+border:"2px solid black"
+, borderWidth: 2,
+    borderRadius: 15,
   
+}} onPress={ ()=>setHasClickedButton(false)}
+><Text style={{color:"red",}}>Click me to go back</Text></TouchableOpacity>
+<TouchableHighlight onPress={pickImage}>
+              <Text>select image</Text>
+            </TouchableHighlight>
+<TextInput style={{backgroundColor:"black",}} onChangeText={(notes) => (setTextNotes(notes))}></TextInput>
 
-      {isFocused && clickedOnButton &&
-        <Camera style={{ flex: 1 }} type={type} ref={cameraRef}>
+
+<TouchableOpacity>
+  
+<Text>Submit Information</Text>
+
+  </TouchableOpacity>
+
+
+
+
+
+
+
+
+      {isFocused && hasClickedButton ?(<Camera style={{ flex: 1 }} type={type} ref={cameraRef}>
           <View style={styles.buttonContainer}>
             {location ? <Text>latitude = {location.coords.latitude}</Text> : null}
             {location ? <Text>longitude = {location.coords.longitude}</Text> : null}
@@ -295,11 +264,11 @@ if(clickedOnButton==true)
               <Text style={{ color: 'black' }}>Flip Camera</Text>
             </TouchableOpacity>
             <Button title={"Take Pic"} onPress={takePicture} />
-            <TouchableHighlight onPress={pickImage}>
-              <Text>select image</Text>
-            </TouchableHighlight>
+            
           </View>
-        </Camera>
+        </Camera>)
+        :(<Text></Text>)
+        
       }
 
     </View >
