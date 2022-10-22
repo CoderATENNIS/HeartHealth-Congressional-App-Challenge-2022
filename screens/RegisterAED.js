@@ -11,9 +11,13 @@ import { useIsFocused } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import { SafeAreaView } from "react-native-safe-area-context";
 // import { firebase } from "../firebaseConfig";
-import { getStorage, ref, uploadString, uploadBytes, uploadBytesResumable, listAll } from "firebase/storage";
+import { getStorage, ref, uploadString, uploadBytes, uploadBytesResumable, listAll,getDownloadURL } from "firebase/storage";
 import { initializeApp } from "firebase/app"
 import * as ImagePicker from 'expo-image-picker';
+//import { addDoc, collection } from "firebase/firestore"; 
+//import { getFirestore } from "firebase/firestore";
+
+
 // import * as ImageManipulator from 'expo-image-manipulator';
 
 const config = {
@@ -26,6 +30,7 @@ const config = {
 };
 
 initializeApp(config)
+//const db = getFirestore(app);
 
 // const storage = getStorage(app)
 
@@ -49,8 +54,8 @@ const RegisterAED = (props) => {
   const [photo, setPhoto] = useState();
   const [uploading, setUploading] = useState(false)
 
-  const [location, setLocation] = useState(null);
 
+const [location, setLocation] = useState(null);
   const isFocused = useIsFocused();
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -60,6 +65,7 @@ const RegisterAED = (props) => {
   // if (!permission) ... 
 
   //if (!permission.granted) ... 
+  
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -69,6 +75,9 @@ const RegisterAED = (props) => {
       quality: 1,
     });
 
+    //const docRef = await addDoc(collection(db,"AED_INFO" ), {
+      //notes:notes
+    //});
 
 
 
@@ -109,13 +118,58 @@ const RegisterAED = (props) => {
 
     const img = await fetch(photo.uri);
     const blob = await img.blob();
+
+
     // console.log(blob)
     // const newFile = new File([blob], `hello.jpg`, {
     //   type: 'image/jpg',
     // })
+
     uploadBytesResumable(reference, blob).then((snapshot) => {
       console.log('Uploaded an array!');
     });;
+   /* const uploadTask = uploadBytesResumable(reference, blob);
+
+// Listen for state changes, errors, and completion of the upload.
+uploadTask.on('state_changed',
+  (snapshot) => {
+    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    console.log('Upload is ' + progress + '% done');
+    switch (snapshot.state) {
+      case 'paused':
+        console.log('Upload is paused');
+        break;
+      case 'running':
+        console.log('Upload is running');
+        break;
+    }
+  }, 
+  (error) => {
+    // A full list of error codes is available at
+    // https://firebase.google.com/docs/storage/web/handle-errors
+    switch (error.code) {
+      case 'storage/unauthorized':
+        // User doesn't have permission to access the object
+        break;
+      case 'storage/canceled':
+        // User canceled the upload
+        break;
+
+      // ...
+
+      case 'storage/unknown':
+        // Unknown error occurred, inspect error.serverResponse
+        break;
+    }
+  }, 
+  () => {
+    // Upload completed successfully, now we can get the download URL
+    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+      console.log('File available at', downloadURL);
+    });
+  }
+);*/
   }
 
   const setCurrentLocation = async () => {
@@ -151,6 +205,7 @@ const RegisterAED = (props) => {
   if (hasCameraPermission === "undefined") { return <Text>Requesting for permission</Text> }
   else if (!hasCameraPermission) { return <Text>Permission denied</Text> }
   let text = 'Waiting..';
+
   if (errorMsg) {
     text = errorMsg;
   } else if (location) {

@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from '@expo/vector-icons';
 import HomeScreen from '../screens/HomeScreen'
-import ProfileScreen from '../screens/ProfileScreen'
+import EmergencyScreen from "../screens/EmergencyScreen";
 import TrainingScreen from '../screens/TrainingScreen'
 import EducationScreen from '../screens/EducationScreen'
 import RegisterAED from '../screens/RegisterAED'
@@ -19,7 +19,7 @@ export default class BottomTabNavigator extends Component {
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
-            if (route.name === 'Profile') {
+            if (route.name === 'Emergency') {
               iconName = focused
                 ? 'body'
                 : 'body';
@@ -43,7 +43,7 @@ if (route.name === 'Home') {
         })}
       >
           <Tab.Screen name="Home" component={HomeScreen} />
-          <Tab.Screen name="Profile" component={ProfileScreen} />
+          <Tab.Screen name="Emergency" component={EmergencyScreen} />
           <Tab.Screen name="Education" component={EducationScreen} />
           <Tab.Screen name="RegisterAED" component={RegisterAED} />
           <Tab.Screen name="Training" component={TrainingScreen} />

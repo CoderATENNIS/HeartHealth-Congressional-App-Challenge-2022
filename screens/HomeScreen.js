@@ -8,6 +8,18 @@ export default class HomeScreen extends Component {
       <View style={styles.container}>
         <Image source={logo} style={styles.image} /> 
       
+        <TouchableOpacity
+        onPress={()=>
+          this.props.navigation.navigate('EmergencyScreen')
+          }
+        style={styles.roundButton2}>
+        <Text style={{color:"black",
+fontSize:"20px",
+fontWeight:"2px",
+textAlign:"center"}}>Emergency SOS</Text>
+      </TouchableOpacity>
+
+
      
 <TouchableOpacity style={styles.button2}
 onPress={()=>
@@ -57,6 +69,16 @@ border:"2px solid black"
 , borderWidth: 2,
     borderRadius: 15,
     marginTop:"0.1%"
+},
+roundButton2: {
+  marginTop: 20,
+  width: 150,
+  height: 150,
+  justifyContent: 'center',
+  alignSelf: 'center',
+  padding: 10,
+  borderRadius: 100,
+  backgroundColor: '#960606',
 },
 
 

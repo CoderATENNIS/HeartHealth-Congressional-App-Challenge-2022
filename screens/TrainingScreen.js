@@ -35,6 +35,10 @@ export default function TrainingCPRScreen() {
     country: "USA"
 })*/
 
+//const docRef = await addDoc(collection(firestore,"AED_INFO" ), {
+ //   location:location,
+      
+//});
   return (
     <View style={styles.container}>
       <Text style={styles.paragraph}>{text}</Text>
