@@ -1,23 +1,29 @@
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/storage'
 import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
 export const firebaseConfig = {
-    apiKey: "AIzaSyAoBsqTwl-GVhHd1RtIy_I2FbLQMcoLTd8",
-    authDomain: "heartappcongressional.firebaseapp.com",
-    projectId: "heartappcongressional",
-    storageBucket: "heartappcongressional.appspot.com",
-    messagingSenderId: "302790298454",
-    appId: "1:302790298454:web:fa71252b44c382c64f64f7",
-    measurementId: "G-RSKHHEFF1T"
-  };
+  apiKey: "AIzaSyBFWGhe8q4UV633SSdL8lNrsHTbvSlVqKo",
+  authDomain: "heartapp-4cb6e.firebaseapp.com",
+  projectId: "heartapp-4cb6e",
+  storageBucket: "heartapp-4cb6e.appspot.com",
+  messagingSenderId: "247795002288",
+  appId: "1:247795002288:web:d11c71a6ad8645892e4475"
+};
 
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig)
+
+function initializeAppIfNecessary() {
+  try {
+    return getApp();
+  } catch (any) {
+    return initializeApp(firebaseConfig);
+  }
 }
 
-const app = initializeApp(firebaseConfig);
+const app = initializeAppIfNecessary()
+const db = getFirestore(app);
 
-export {app, firebase}
+export { app, firebase, db }
 
 
