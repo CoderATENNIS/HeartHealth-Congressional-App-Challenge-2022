@@ -84,7 +84,7 @@ const EducationScreen = () => {
 
       />
 
-      <Text style={{fontSize:30,alignSelf:'center',color:"white",marginTop:-65}}>How to administer CPR</Text>
+      <Text style={{fontSize:30,alignSelf:'center',color:"white",marginTop:-65}}>How to Administer CPR</Text>
       <Text style={{color:"white",marginTop:15}}>Cardiopulmonary resuscitation, or CPR, is an essential element of cardiac arrest response. There are four key steps to CPR:
 
 

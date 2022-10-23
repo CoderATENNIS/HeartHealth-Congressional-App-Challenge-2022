@@ -109,7 +109,7 @@ textAlign:"center"
 container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'black',
+    backgroundColor: 'light grey',
     padding: 8,
     width:'100%'
 
