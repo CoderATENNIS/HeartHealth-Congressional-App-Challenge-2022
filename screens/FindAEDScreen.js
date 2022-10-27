@@ -17,7 +17,7 @@ import * as geofirestore from 'geofirestore';
 //   appId: "1:247795002288:web:d11c71a6ad8645892e4475"
 // })
 app
-export default function TrainingCPRScreen() {
+export default function FindAEDScreen() {
 
   // Create a Firestore reference
   const firestore = firebase.firestore();
@@ -29,6 +29,21 @@ export default function TrainingCPRScreen() {
 
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+const[displayData,setDisplayData]= useState(null)
+
+
+  function showData(){
+
+
+
+
+
+
+
+
+
+
+  }
 
   useEffect(() => {
     (async () => {
@@ -59,15 +74,18 @@ export default function TrainingCPRScreen() {
       // });
 
 
-      // Create a GeoQuery based on a location
+      // Create a GeoQuery based on a location numer=amount of miles
       const query = geocollection.near({ center: new firebase.firestore.GeoPoint(location.coords.latitude, location.coords.longitude), radius: 100 });
 
       // Get query (as Promise)
+
       query.get().then((value) => {
         // All GeoDocument returned by GeoQuery, like the GeoDocument added above
-        console.log(value.docs.length, value.docs);
+        setDisplayData(value.docs);
+        
       });
-
+//create state in this query function to store information and then in render render all the aeds 
+ 
 
     })();
   }, []);
@@ -94,6 +112,9 @@ export default function TrainingCPRScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.paragraph}>{text}</Text>
+
+
+      
     </View>
   );
 }

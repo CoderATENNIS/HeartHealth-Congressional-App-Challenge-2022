@@ -5,7 +5,7 @@ import { registerRootComponent } from 'expo';
 import EmergencyScreen from "./screens/EmergencyScreen";
 import EducationScreen from "./screens/EducationScreen";
 import RegisterAED from "./screens/RegisterAED";
-import TrainingCPRScreen from "./screens/TrainingScreen";
+import TrainingCPRScreen from "./screens/FindAEDScreen";
 import { AppRegistry } from 'react-native';
 
 export default class App extends Component {

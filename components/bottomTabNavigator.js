@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from '@expo/vector-icons';
 import HomeScreen from '../screens/HomeScreen'
 import EmergencyScreen from "../screens/EmergencyScreen";
-import TrainingScreen from '../screens/TrainingScreen'
+import FindAEDScreen from '../screens/FindAEDScreen'
 import EducationScreen from '../screens/EducationScreen'
 import RegisterAED from '../screens/RegisterAED'
 
@@ -46,7 +46,7 @@ if (route.name === 'Home') {
           <Tab.Screen name="Emergency" component={EmergencyScreen} />
           <Tab.Screen name="Education" component={EducationScreen} />
           <Tab.Screen name="RegisterAED" component={RegisterAED} />
-          <Tab.Screen name="Training" component={TrainingScreen} />
+          <Tab.Screen name="FindAed" component={FindAEDScreen} />
         </Tab.Navigator>
       </NavigationContainer>
     );

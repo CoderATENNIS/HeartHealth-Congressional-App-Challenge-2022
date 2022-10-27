@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, Button, ActivityIndicator, TouchableHighlight, TextInput } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, Button, ActivityIndicator,TouchableWithoutFeedback,Keyboard,TouchableHighlight, TextInput,KeyboardAvoidingView} from "react-native";
 import { Camera, CameraType } from 'expo-camera';
 import { useEffect, useRef } from "react";
 import { shareAsync } from "expo-sharing";
@@ -14,7 +14,8 @@ import { getFirestore, collection, addDoc } from "firebase/firestore";
 import * as ImagePicker from 'expo-image-picker';
 import { app, firebase, db } from '../config';
 import * as geofirestore from 'geofirestore';
-
+import CameraUri from '../assets/cameraIcon.jpg'
+import SelectImage from '../assets/SelectImage.png'
 app
 firebase.initializeApp({
   apiKey: "AIzaSyBFWGhe8q4UV633SSdL8lNrsHTbvSlVqKo",
@@ -26,7 +27,7 @@ firebase.initializeApp({
 })
 // Create a Firestore reference
 const firestore = firebase.firestore();
-// Create a GeoFirestore reference
+// Create a GeoFirestore referencee
 const GeoFirestore = geofirestore.initializeApp(firestore);
 // Create a GeoCollection reference
 const geocollection = GeoFirestore.collection('aed');
@@ -78,6 +79,15 @@ const RegisterAED = (props) => {
       }); //upload images
     }
   };
+  const UselessTextInput = (props) => {
+    return (
+      <TextInput
+        {...props} // Inherit any props passed to it; e.g., multiline, numberOfLines below
+        editable
+        maxLength={400}
+      />
+    );
+  }
 
   const uploadImage = async () => {
     const storage = getStorage();
@@ -238,22 +248,57 @@ const RegisterAED = (props) => {
   }
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={{
-        width: 100,
-        height: 65,
-        backgroundColor: "black",
+    <KeyboardAvoidingView
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+    style={styles.container}
+  >
+      <TouchableOpacity onPress={pickImage} style={{
+        width: 70,
+        height: 60,
+        backgroundColor: "white",
+        display: "flex",
+        border: "2px solid black"
+        , borderWidth: 2,
+        borderRadius: 15,
+        marginTop:2,
+        marginLeft:2
+              }}>
+        <Image source={SelectImage} style={{
+            flex: 1,
+            width: null,
+            height: null,
+            resizeMode: 'contain',
+            marginTop:"2%",
+            postitionY:'0'
+        }}/>
+        <Text></Text>
+      </TouchableOpacity>
+      {!hasClickedButton ?(<TouchableOpacity style={{
+        width: 156,
+        height: 100,
+        backgroundColor: "white",
         display: "flex",
         justifyContent: "center",
         alignSelf: "center",
         border: "2px solid black"
         , borderWidth: 2,
         borderRadius: 15,
-        marginTop: "0.1%"
+        marginBottom:100,
       }} onPress={() => setHasClickedButton(true)}
-      ><Text style={{ color: "red", }}>Click me to take photo</Text></TouchableOpacity>
+      >
+        <Image source={CameraUri} style={{
+            flex: 1,
+            width: null,
+            height: null,
+            resizeMode: 'contain',
+            marginTop:"2%",
+            postitionY:'0'
+        }}/>
+        <Text style={{ color: "red",alignSelf:'center' }}>Click me to take photo</Text></TouchableOpacity>)
+        :(null)
 
-      <TouchableOpacity style={{
+      }
+      {hasClickedButton ?(<TouchableOpacity style={{
         width: 100,
         height: 65,
         backgroundColor: "black",
@@ -266,15 +311,26 @@ const RegisterAED = (props) => {
       }} onPress={() => setHasClickedButton(false)}
       >
         <Text style={{ color: "red", }}>Click me to go back</Text>
-      </TouchableOpacity>
-      <TouchableHighlight onPress={pickImage}>
-        <Text>select image</Text>
-      </TouchableHighlight>
-      <TextInput style={{ backgroundColor: "black", color: "red" }} onChangeText={(notes) => (setTextNotes(notes))}></TextInput>
+      </TouchableOpacity>)
+      :(null)}
+     
+      
 
-      <TouchableOpacity onPress={saveData}>
-        <Text>Submit Information</Text>
-      </TouchableOpacity>
+
+
+     {hasClickedButton ?(null
+     ):( <View><Text style={{alignSelf:'center'}}>Add Additional Information Here:</Text>
+     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+     <TextInput style={{ backgroundColor: "white", color: "black",fontSize:24, height:100,borderBottomWidth:2 ,borderRightWidth: 2,
+   borderLeftWidth: 2,borderTopWidth:2,borderRadius: 15,marginTop:30,padding:10,multiline:true }} onChangeText={(notes) => (setTextNotes(notes))}></TextInput>
+</TouchableWithoutFeedback>
+     <TouchableOpacity onPress={saveData} style={styles.buttons}>
+       <Text>Submit Information</Text>
+     </TouchableOpacity></View>
+
+      )}
+
+
       {isFocused && hasClickedButton ? (<Camera style={{ flex: 1 }} type={type} ref={cameraRef}>
         <View style={styles.buttonContainer}>
           {location ? <Text>latitude = {location.coords.latitude}</Text> : null}
@@ -287,16 +343,17 @@ const RegisterAED = (props) => {
       </Camera>)
         : (<Text></Text>)
       }
-    </View >
+   </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    
     justifyContent: 'center',
-    // backgroundColor: 'black',
-    padding: 8,
+    backgroundColor: 'light grey',
+    flex:1
+
   },
   text: {
     color: "#ffff",
@@ -311,7 +368,18 @@ const styles = StyleSheet.create({
   preview: {
     alignSelf: 'stretch',
     flex: 1
-  }
+  },
+  buttons: {
+    backgroundColor:"#1d7fcf",
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderRadius: 15,
+    margin:10,
+    width: 150,
+    height: 50,
+    alignSelf:'center'
+  },
 });
 export default RegisterAED;
 
