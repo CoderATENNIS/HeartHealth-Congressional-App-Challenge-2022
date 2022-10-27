@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, Text, View, StyleSheet } from 'react-native';
+import { Platform, Text, View, StyleSheet,FlatList } from 'react-native';
 // import Device from 'expo-device';
 import * as Location from 'expo-location';
 import { getFirestore, collection, getDocs } from "firebase/firestore";
@@ -7,6 +7,8 @@ import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { app, firebase, db } from '../config';
 import 'firebase/compat/firestore';
 import * as geofirestore from 'geofirestore';
+import CustomRow from '../CustomRow'
+
 
 // firebase.initializeApp({
 //   apiKey: "AIzaSyBFWGhe8q4UV633SSdL8lNrsHTbvSlVqKo",
@@ -32,18 +34,20 @@ export default function FindAEDScreen() {
 const[displayData,setDisplayData]= useState(null)
 
 
-  function showData(){
+/*const CustomRow = ({ title, description, image_url }) => (
+  <View style={styles.container}>
+      <Image source={{ uri: image_url }} style={styles.photo} />
+      <View style={styles.container_text}>
+          <Text style={styles.title}>
+              {title}
+          </Text>
+          <Text style={styles.description}>
+              {description}
+          </Text>
+      </View>
 
-
-
-
-
-
-
-
-
-
-  }
+  </View>
+);*/
 
   useEffect(() => {
     (async () => {
@@ -99,6 +103,19 @@ const[displayData,setDisplayData]= useState(null)
     text = JSON.stringify(location);
 
   }
+  const CustomListview = ({ displayData }) => (
+    <View style={styles.container}>
+        <FlatList
+                data={displayData}
+                renderItem={({ item }) => <CustomRow
+                    address={item.address}
+                    comments={item.comments}
+                    imageUri={item.imageUri}
+                />}
+            />
+  
+    </View>
+  );
   /*db.collection("cities").doc("LA").set({
     name: "Los Angeles",
     state: "CA",
@@ -111,7 +128,10 @@ const[displayData,setDisplayData]= useState(null)
 //});
   return (
     <View style={styles.container}>
-      <Text style={styles.paragraph}>{text}</Text>
+      
+      <CustomListview
+          itemList={displayData}
+        />
 
 
       
@@ -125,10 +145,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
+    
   },
   paragraph: {
     fontSize: 18,
     textAlign: 'center',
     color: "black"
   },
+  title: {
+    fontSize: 16,
+    color: '#000',
+},
+container_text: {
+    flex: 1,
+    flexDirection: 'column',
+    marginLeft: 12,
+    justifyContent: 'center',
+},
+description: {
+    fontSize: 11,
+    fontStyle: 'italic',
+},
+photo: {
+    height: 50,
+    width: 50,
+},
 });

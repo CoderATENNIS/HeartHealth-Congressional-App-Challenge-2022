@@ -16,6 +16,7 @@ import { app, firebase, db } from '../config';
 import * as geofirestore from 'geofirestore';
 import CameraUri from '../assets/cameraIcon.jpg'
 import SelectImage from '../assets/SelectImage.png'
+
 app
 firebase.initializeApp({
   apiKey: "AIzaSyBFWGhe8q4UV633SSdL8lNrsHTbvSlVqKo",
