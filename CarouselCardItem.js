@@ -1,15 +1,15 @@
 import React from 'react'
-import { View, Text, StyleSheet, Dimensions, Image,TouchableOpacity,Platform,Linking } from "react-native"
+import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Platform, Linking } from "react-native"
 
 export const SLIDER_WIDTH = Dimensions.get('window').width + 80
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7)
 
 dialCall = (number) => {
-    let phoneNumber = '';
-    if (Platform.OS === 'android') { phoneNumber = `tel:${number}`; }
-    else {phoneNumber = `telprompt:${number}`; }
-    Linking.openURL(phoneNumber);
- };
+  let phoneNumber = '';
+  if (Platform.OS === 'android') { phoneNumber = `tel:${number}`; }
+  else { phoneNumber = `telprompt:${number}`; }
+  Linking.openURL(phoneNumber);
+};
 
 
 const CarouselCardItem = ({ item, index }) => {
@@ -22,21 +22,19 @@ const CarouselCardItem = ({ item, index }) => {
       <Text style={styles.header}>{item.title}</Text>
       <Text style={styles.body}>{item.body}</Text>
       <TouchableOpacity
-                   style={{
-                   height: 30,
-                   width: 250,
-                   backgroundColor: "red",
-                   alignItems: "center",
-                   justifyContent: "center",
-                   borderRadius: 5,
-                   marginLeft:50,
-                   marginBottom:450
-                   }}
-                 onPress={()=>{dialCall(9176202718)}}
-                >
-                  
-                <Text>Touch this button to call 911</Text>
-                </TouchableOpacity>
+        style={{
+          backgroundColor: "red",
+          alignItems: "center",
+          justifyContent: "center",
+          borderRadius: 5,
+          marginTop: 24,
+          // marginBottom: 450,
+          padding: 12
+        }}
+        onPress={() => { dialCall(9176202718) }}
+      >
+        <Text style={{ color: "white" }}>Touch this button to call 911</Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -47,6 +45,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: ITEM_WIDTH,
     paddingBottom: 40,
+    alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -55,28 +54,24 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.29,
     shadowRadius: 4.65,
     elevation: 7,
-    height:600
+    height: 600
   },
   image: {
     width: ITEM_WIDTH,
     height: 300,
-    
+
   },
   header: {
     color: "#222",
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: "bold",
-    paddingLeft: 20,
+    // paddingLeft: 20,
     paddingTop: 20
   },
   body: {
     color: "#222",
     fontSize: 18,
-    paddingLeft: 20,
-    paddingLeft: 20,
-    paddingRight: 20,
-  
-
+    padding: 16,
   }
 })
 
