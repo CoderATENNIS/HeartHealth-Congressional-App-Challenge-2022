@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, Text, View, StyleSheet, Dimensions, FlatList, TouchableOpacity } from 'react-native';
+import { Platform, Text, View, StyleSheet, Dimensions, FlatList, TouchableOpacity, Image } from 'react-native';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 
@@ -10,15 +10,8 @@ import { app, firebase, db } from '../config';
 import 'firebase/compat/firestore';
 import * as geofirestore from 'geofirestore';
 import { Ionicons } from '@expo/vector-icons';
+import CustomRow from '../CustomRow'
 
-// firebase.initializeApp({
-//   apiKey: "AIzaSyBFWGhe8q4UV633SSdL8lNrsHTbvSlVqKo",
-//   authDomain: "heartapp-4cb6e.firebaseapp.com",
-//   projectId: "heartapp-4cb6e",
-//   storageBucket: "heartapp-4cb6e.appspot.com",
-//   messagingSenderId: "247795002288",
-//   appId: "1:247795002288:web:d11c71a6ad8645892e4475"
-// })
 app
 export default function FindAEDScreen() {
 
@@ -40,6 +33,23 @@ export default function FindAEDScreen() {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   })
+
+
+  /*const CustomRow = ({ title, description, image_url }) => (
+    <View style={styles.container}>
+        <Image source={{ uri: image_url }} style={styles.photo} />
+        <View style={styles.container_text}>
+            <Text style={styles.title}>
+                {title}
+            </Text>
+            <Text style={styles.description}>
+                {description}
+            </Text>
+        </View>
+  
+    </View>
+  );*/
+
   useEffect(() => {
     (async () => {
 
@@ -59,10 +69,10 @@ export default function FindAEDScreen() {
       query.get().then((value) => {
         // All GeoDocument returned by GeoQuery, like the GeoDocument added above
         const records = value.docs.slice(0, 5);
-        console.log("docs", value.docs)
-        console.log("docs", records.map(x => x.data()))
+        // console.log("docs", value.docs)
+        // console.log("docs", records.map(x => x.data()))
         setDisplayData(records.map(x => x.data()));
-        console.log("region", region)
+        // console.log("region", region)
       });
     })();
   }, []);
@@ -86,6 +96,7 @@ export default function FindAEDScreen() {
   const Item = ({ data }) => (
     <View style={styles.item}>
       <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+        {/* <Image source={{ uri: data.imageUri }} style={styles.photo} /> */}
         <Text style={{ margin: 18, marginRight: 48 }}>{data?.address}</Text>
         {/* <Text>{data?.coordinates?._lat}, {data?.coordinates?._long}</Text> */}
         <TouchableOpacity style={{
@@ -102,6 +113,10 @@ export default function FindAEDScreen() {
           <Text style={{ color: "white" }}>Direction</Text>
         </TouchableOpacity>
       </View>
+      <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+        <Image source={{ uri: data.imageUri }} style={styles.photo} />
+        <Text style={{ margin: 18, marginRight: 48 }}>{data?.comments}</Text>
+      </View>
 
     </View>
   );
@@ -113,7 +128,19 @@ export default function FindAEDScreen() {
     text = JSON.stringify(location);
 
   }
+  const CustomListview = ({ displayData }) => (
+    <View style={styles.container}>
+      <FlatList
+        data={displayData}
+        renderItem={({ item }) => <CustomRow
+          address={item.address}
+          comments={item.comments}
+          imageUri={item.imageUri}
+        />}
+      />
 
+    </View>
+  );
   const renderItem = ({ item }) => <Item data={item} />;
 
   return (
@@ -148,6 +175,13 @@ export default function FindAEDScreen() {
         :
         <FlatList data={displayData} renderItem={renderItem} keyExtractor={(item, index) => index} />
       }
+
+      {/* <CustomListview
+        itemList={displayData}
+      /> */}
+
+
+
     </View>
   );
 }
@@ -176,5 +210,23 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
+  },
+  title: {
+    fontSize: 16,
+    color: '#000',
+  },
+  container_text: {
+    flex: 1,
+    flexDirection: 'column',
+    marginLeft: 12,
+    justifyContent: 'center',
+  },
+  description: {
+    fontSize: 11,
+    fontStyle: 'italic',
+  },
+  photo: {
+    height: 50,
+    width: 50,
   },
 });
