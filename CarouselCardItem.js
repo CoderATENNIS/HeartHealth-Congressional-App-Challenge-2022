@@ -31,7 +31,7 @@ const CarouselCardItem = ({ item, index }) => {
           // marginBottom: 450,
           padding: 12
         }}
-        onPress={() => { dialCall(9176202718) }}
+        onPress={() => { dialCall(911) }}
       >
         <Text style={{ color: "white" }}>Touch this button to call 911</Text>
       </TouchableOpacity>

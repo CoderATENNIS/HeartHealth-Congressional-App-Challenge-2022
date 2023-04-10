@@ -25,4 +25,4 @@ AppRegistry.registerComponent('main', () => App);
 
 })
 
-const AppContainer = createAppContainer(AppNavigator)*/
+const AppContainer = createAppContainer */

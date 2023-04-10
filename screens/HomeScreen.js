@@ -59,6 +59,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 100,
     backgroundColor: '#960606',
+    border: "2px solid black",
+    borderWidth: 2,
   },
 
   button2: {
@@ -92,6 +94,7 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     resizeMode: 'contain',
-    postitionY: '0'
+    postitionY: '0',
+    alignSelf:'center',
   }
 })

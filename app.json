@@ -11,15 +11,15 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "plugins":[
+    "plugins": [
       [
         "expo-media-library",
         {
-          "photopermissions":"Allow $(PRODUCT_NAME) to access your photo",
-          "savePhotosPermissions":"Allow $(PRODUCT_NAME) to save photos",
-          "isAccessedMediaLocationEnabled":"true"
+          "photopermissions": "Allow $(PRODUCT_NAME) to access your photo",
+          "savePhotosPermissions": "Allow $(PRODUCT_NAME) to save photos",
+          "isAccessedMediaLocationEnabled": "true"
         }
-    ]
+      ]
     ],
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -35,8 +35,11 @@
         "UIBackgroundModes": [
           "location",
           "fetch"
-        ]
-      }
+        ],
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos",
+        "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save photos"
+      },
+      "bundleIdentifier": "com.coderat.HeartAppV2Real"
     },
     "android": {
       "adaptiveIcon": {
@@ -44,14 +47,25 @@
         "backgroundColor": "#FFFFFF"
       },
       "permissions": [
-        "ACCESS_BACKGROUND_LOCATION"
+        "ACCESS_BACKGROUND_LOCATION",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
       ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "packagerOpts": {
-      "sourceExts": ["cjs","esm","idb"]
+      "sourceExts": [
+        "cjs",
+        "esm",
+        "idb"
+      ]
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c615abf3-c061-437e-9f43-38b91bd57f58"
+      }
     }
   }
 }

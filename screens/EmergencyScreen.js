@@ -40,7 +40,7 @@ const EmergencyScreen = () => {
         // All GeoDocument returned by GeoQuery, like the GeoDocument added above
         const records = value.docs[0].data();
         console.log(records.address)
-        data[3].body = "Make eye contact with the nearest bystander and tell them to drive to nearest AED \n\nAddress: " + records.address
+        data[3].body = "Make eye contact with the nearest bystander and tell them to drive to nearest AED \n\n Address of Nearest AED: " + records.address
         setCprSteps(data)
 
       });
